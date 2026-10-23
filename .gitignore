@@ -1,0 +1,14 @@
+# Виртуальное окружение
+venv/
+.venv/
+
+# Сгенерированные данные
+
+# Кэш DVC
+.dvc/cache/
+.dvc_remote/
+
+# Мусор от Python и Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
