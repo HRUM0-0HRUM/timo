@@ -9,8 +9,8 @@ venv/
 .dvc_remote/
 
 # директории и файлы под dvc
-data/incoming
 data/raw/train.csv
+data/incoming/base/train_base.csv
 
 # Мусор от Python и Jupyter
 __pycache__/

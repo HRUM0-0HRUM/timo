@@ -1,0 +1,11 @@
+{
+ "version": "v1",
+ "trained": "2026-11-16",
+ "data": "train_base.csv, 2216808 строк, 2013-01-01..2016-05-31, обучение на 100 %",
+ "algorithm": "Ridge (L2)",
+ "target": "log1p(sales); прогноз -> expm1",
+ "metric": "RMSLE",
+ "cv": "walk-forward, 5 фолдов по 30 дней, зазор 30 дней",
+ "cv_rmsle": 0.6614,
+ "params": "alpha=1"
+}

@@ -1,13 +1,22 @@
 import pandas as pd
 import os
+import shutil
+from pathlib import Path
 
-data_dir = '../data/raw'
-output_dir = '../data/incoming'
+data_dir = Path('../data/raw').resolve()
+output_dir = Path('../data/incoming').resolve()
+dvc_file = output_dir.parent / f"{output_dir.name}.dvc"
 
-os.makedirs(f'{output_dir}/base', exist_ok=True)
-os.makedirs(f'{output_dir}/oil', exist_ok=True)
-os.makedirs(f'{output_dir}/transactions', exist_ok=True)
-os.makedirs(f'{output_dir}/holidays_events', exist_ok=True)
+if output_dir.exists():
+    shutil.rmtree(output_dir)
+
+if dvc_file.exists():
+    os.remove(dvc_file)
+
+(output_dir / 'base').mkdir(parents=True, exist_ok=True)
+(output_dir / 'oil').mkdir(parents=True, exist_ok=True)
+(output_dir / 'transactions').mkdir(parents=True, exist_ok=True)
+(output_dir / 'holidays_events').mkdir(parents=True, exist_ok=True)
 
 cutoff_date = pd.to_datetime('2016-05-31')
 last_batch_end_date = pd.to_datetime('2017-08-15')
@@ -46,12 +55,16 @@ for i, month in enumerate(unique_months, start=1):
 
 # лагирование + деление на батчи transactions
 transactions = pd.read_csv(f'{data_dir}/transactions.csv', parse_dates=['date'])
-
 transactions = transactions[transactions['date'] <= last_batch_end_date].copy()
 
+# Создаем лаг
 transactions = transactions.sort_values(['store_nbr', 'date']).reset_index(drop=True)
 transactions['transactions'] = transactions.groupby('store_nbr')['transactions'].shift(1)
 
+# Финальная сортировка по дате и номеру магазина (для читаемости)
+transactions = transactions.sort_values(['date', 'store_nbr']).reset_index(drop=True)
+
+# Делим на base и future
 trans_base = transactions[transactions['date'] <= cutoff_date].copy()
 trans_base.to_csv(f'{output_dir}/transactions/transactions_base.csv', index=False)
 

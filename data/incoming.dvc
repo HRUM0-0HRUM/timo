@@ -1,6 +1,0 @@
-outs:
-- md5: 42d0d50f0714cf90e4008869cf5f1969.dir
-  size: 123563715
-  nfiles: 50
-  hash: md5
-  path: incoming
